@@ -109,7 +109,7 @@ function tag(xml, name) { const re = new RegExp(`<${name}[^>]*>([\\s\\S]*?)<\\/$
 function attrLink(xml) { const m = xml.match(/<link[^>]+href=["']([^"']+)["']/i); return m ? decode(m[1]) : ''; }
 function decode(s='') { return s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'"); }
 function strip(s='') { return decode(s.replace(/<[^>]+>/g,' ')).replace(/\s+/g,' ').trim(); }
-function cleanUrl(u) { const x = new URL(u); ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','cx_testId','cx_testVariant'].forEach(k=>x.searchParams.delete(k)); x.hash=''; return x.href; }
+function cleanUrl(u) { const x = new URL(u); x.search = ''; x.hash = ''; return x.href.replace(/\/$/, ''); }
 function unique(a){return [...new Set(a)];}
 function dedupe(items){ const seen=new Set(); return items.filter(x=>{ if(!x.url||seen.has(x.url))return false; seen.add(x.url); return true; }); }
 function sameHostOrSub(a,b){ a=a.replace(/^www\./,''); b=b.replace(/^www\./,''); return a===b || b.endsWith('.'+a) || a.endsWith('.'+b); }
