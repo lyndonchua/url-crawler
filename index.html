@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily News URL Sieve</title>
+  <style>
+    :root{--bg:#f5f7fb;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--brand:#2563eb;--brand2:#1d4ed8;--good:#059669;--bad:#dc2626;--soft:#eff6ff}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}.wrap{max-width:1100px;margin:0 auto;padding:24px}.hero{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}.title{font-size:28px;font-weight:850;margin:0 0 6px}.sub{color:var(--muted);font-size:14px;line-height:1.5}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px rgba(15,23,42,.06);padding:18px;margin-bottom:16px}.grid{display:grid;grid-template-columns:1.5fr .75fr .75fr;gap:12px}@media(max-width:800px){.grid{grid-template-columns:1fr}.hero{display:block}}label{font-weight:750;font-size:13px;display:block;margin:0 0 6px}input,select{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;font-size:15px;background:#fff;color:var(--ink)}input:focus,select:focus{outline:3px solid #bfdbfe;border-color:#60a5fa}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer;background:var(--brand);color:white;box-shadow:0 8px 20px rgba(37,99,235,.18)}button:hover{background:var(--brand2)}button.secondary{background:#111827}button.ghost{background:#fff;color:#111827;border:1px solid var(--line);box-shadow:none}.pill{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:8px 10px;background:#fff;font-size:13px;color:var(--muted)}.status{margin-top:12px;font-size:14px;color:var(--muted);line-height:1.45}.status.ok{color:var(--good)}.status.err{color:var(--bad)}.resultsHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 12px}.count{font-size:13px;color:var(--muted)}.list{display:grid;gap:10px}.item{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.itemTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.url{font-weight:800;word-break:break-word;color:#1d4ed8;text-decoration:none}.url:hover{text-decoration:underline}.meta{font-size:12px;color:var(--muted);margin-top:6px}.badge{font-size:12px;border-radius:999px;padding:5px 8px;background:var(--soft);color:#1e40af;white-space:nowrap}.empty{padding:22px;border:1px dashed #cbd5e1;border-radius:14px;text-align:center;color:var(--muted);background:#f8fafc}.small{font-size:12px;color:var(--muted)}.checkbox{display:flex;align-items:center;gap:8px}.checkbox input{width:auto}.preset{display:flex;gap:8px;flex-wrap:wrap}.preset button{padding:8px 10px;font-size:12px}.spinner{display:none;width:16px;height:16px;border:2px solid #dbeafe;border-top-color:#2563eb;border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loading .spinner{display:inline-block}.loading button.primary{opacity:.75;pointer-events:none}</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <h1 class="title">Daily News URL Sieve</h1>
+        <div class="sub">Enter a news homepage such as <b>https://www.straitstimes.com/</b>. The app returns only URLs published on the selected date. No article body text is extracted.</div>
+      </div>
+      <div class="pill">Singapore time by default</div>
+    </div>
+
+    <div class="card" id="formCard">
+      <div class="grid">
+        <div>
+          <label for="siteUrl">News site URL</label>
+          <input id="siteUrl" value="https://www.straitstimes.com/" placeholder="https://www.straitstimes.com/" />
+        </div>
+        <div>
+          <label for="date">Date</label>
+          <input id="date" type="date" />
+        </div>
+        <div>
+          <label for="sourceMode">Source mode</label>
+          <select id="sourceMode">
+            <option value="auto">Auto: RSS → sitemap → homepage</option>
+            <option value="rss">RSS only</option>
+            <option value="sitemap">Sitemap only</option>
+            <option value="homepage">Homepage only</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <button class="primary" id="fetchBtn"><span class="spinner"></span> Fetch today’s URLs</button>
+        <button class="ghost" id="copyBtn">Copy URLs</button>
+        <button class="ghost" id="csvBtn">Export CSV</button>
+        <button class="ghost" id="clearBtn">Clear</button>
+      </div>
+      <div class="row preset">
+        <span class="small">Quick sources:</span>
+        <button class="ghost" data-url="https://www.straitstimes.com/">ST</button>
+        <button class="ghost" data-url="https://www.channelnewsasia.com/">CNA</button>
+        <button class="ghost" data-url="https://www.todayonline.com/">TODAY</button>
+        <button class="ghost" data-url="https://www.businesstimes.com.sg/">BT</button>
+      </div>
+      <div id="status" class="status">Ready.</div>
+    </div>
+
+    <div class="card">
+      <div class="resultsHead">
+        <div>
+          <b>Results</b>
+          <div class="count" id="count">0 URLs</div>
+        </div>
+        <div class="small" id="runInfo"></div>
+      </div>
+      <div id="results" class="empty">No URLs yet. Enter a site and click fetch.</div>
+    </div>
+  </div>
+
+<script>
+const $ = (id)=>document.getElementById(id);
+let rows = [];
+
+function sgToday(){
+  const p = new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Singapore',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+  const o = Object.fromEntries(p.map(x=>[x.type,x.value]));
+  return `${o.year}-${o.month}-${o.day}`;
+}
+$('date').value = sgToday();
+
+function setStatus(msg, cls=''){
+  const el=$('status'); el.textContent=msg; el.className='status '+cls;
+}
+function render(){
+  $('count').textContent = `${rows.length} URL${rows.length===1?'':'s'}`;
+  if(!rows.length){ $('results').className='empty'; $('results').textContent='No matching URLs found.'; return; }
+  $('results').className='list';
+  $('results').innerHTML = rows.map((r,i)=>`
+    <div class="item">
+      <div class="itemTop">
+        <a class="url" href="${escapeHtml(r.url)}" target="_blank" rel="noopener">${i+1}. ${escapeHtml(r.url)}</a>
+        <span class="badge">${escapeHtml(r.source || 'found')}</span>
+      </div>
+      <div class="meta">Published: ${escapeHtml(r.published || 'date matched')} ${r.title ? ' · '+escapeHtml(r.title) : ''}</div>
+    </div>`).join('');
+}
+function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+
+async function fetchUrls(){
+  const body = { url:$('siteUrl').value.trim(), date:$('date').value, mode:$('sourceMode').value, timezone:'Asia/Singapore' };
+  if(!body.url) return setStatus('Enter a news site URL first.','err');
+  document.body.classList.add('loading'); setStatus('Fetching public feeds/sitemaps and filtering by date...');
+  try{
+    const res = await fetch('/api/fetch-news', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Fetch failed');
+    rows = data.items || [];
+    $('runInfo').textContent = `${data.date} · ${data.modeUsed || body.mode}`;
+    render();
+    setStatus(data.message || `Found ${rows.length} URLs.`, rows.length ? 'ok' : '');
+  }catch(e){ rows=[]; render(); setStatus(e.message, 'err'); }
+  finally{ document.body.classList.remove('loading'); }
+}
+
+function copyUrls(){
+  if(!rows.length) return setStatus('No URLs to copy.','err');
+  navigator.clipboard.writeText(rows.map(r=>r.url).join('\n'));
+  setStatus('Copied URLs to clipboard.','ok');
+}
+function exportCsv(){
+  if(!rows.length) return setStatus('No URLs to export.','err');
+  const csv = 'url,published,source,title\n' + rows.map(r=>[r.url,r.published||'',r.source||'',r.title||''].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=`news-urls-${$('date').value}.csv`; a.click(); URL.revokeObjectURL(a.href);
+}
+
+$('fetchBtn').onclick=fetchUrls; $('copyBtn').onclick=copyUrls; $('csvBtn').onclick=exportCsv; $('clearBtn').onclick=()=>{rows=[];render();setStatus('Cleared.')};
+document.querySelectorAll('[data-url]').forEach(b=>b.onclick=()=>{$('siteUrl').value=b.dataset.url;});
+</script>
+</body>
+</html>
