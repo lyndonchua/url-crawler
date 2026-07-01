@@ -3,10 +3,13 @@ const UA = 'Mozilla/5.0 (compatible; DailyNewsUrlSieve/1.0; +https://example.com
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   try {
-    const { url, date, mode = 'auto', timezone = 'Asia/Singapore' } = req.body || {};
-    if (!url || !date) return res.status(400).json({ error: 'URL and date are required.' });
+    const { url, date, dateFrom, dateTo, mode = 'auto', timezone = 'Asia/Singapore' } = req.body || {};
+    const start = dateFrom || date;
+    const end = dateTo || dateFrom || date;
+    if (!url || !start || !end) return res.status(400).json({ error: 'URL and date range are required.' });
+    if (start > end) return res.status(400).json({ error: 'From date cannot be after To date.' });
     const base = new URL(url);
-    const target = date;
+    const target = { start, end };
     const candidates = buildCandidates(base);
     let all = [], modeUsed = mode;
 
@@ -24,7 +27,7 @@ export default async function handler(req, res) {
     }
 
     all = dedupe(all).filter(x => sameHostOrSub(base.hostname, new URL(x.url).hostname));
-    res.status(200).json({ date: target, modeUsed, items: all, message: `Found ${all.length} URL${all.length === 1 ? '' : 's'} for ${target}.` });
+    res.status(200).json({ dateFrom: start, dateTo: end, modeUsed, items: all, message: `Found ${all.length} URL${all.length === 1 ? '' : 's'} from ${start} to ${end}.` });
   } catch (e) {
     res.status(500).json({ error: e.message || 'Unable to fetch this site.' });
   }
@@ -61,7 +64,7 @@ async function readFeed(feedUrl, target, tz) {
     const link = tag(ch,'link') || attrLink(ch) || tag(ch,'guid');
     const pub = tag(ch,'pubDate') || tag(ch,'published') || tag(ch,'updated') || tag(ch,'dc:date');
     const title = strip(tag(ch,'title') || '');
-    if (!link || !pub || dateKey(pub, tz) !== target) return null;
+    if (!link || !pub || !dateInRange(dateKey(pub, tz), target)) return null;
     return { url: cleanUrl(link), published: pub, source: 'RSS', title };
   }).filter(Boolean);
 }
@@ -74,7 +77,7 @@ async function readSitemap(smUrl, target, tz, depth = 0) {
   for (let i=0;i<locs.length;i++) {
     const loc = locs[i], lm = lastmods[i] || '';
     if (/\.xml(\.gz)?($|\?)/i.test(loc) && depth < 1) out.push(...await readSitemap(loc, target, tz, depth + 1));
-    else if (lm && dateKey(lm, tz) === target) out.push({ url: cleanUrl(loc), published: lm, source: 'Sitemap', title: '' });
+    else if (lm && dateInRange(dateKey(lm, tz), target)) out.push({ url: cleanUrl(loc), published: lm, source: 'Sitemap', title: '' });
   }
   return out;
 }
@@ -84,13 +87,13 @@ async function readHomepage(homeUrl, target, tz) {
   const base = new URL(homeUrl);
   const anchors = [...txt.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)];
   const pageDate = dateKey(new Date().toISOString(), tz);
-  if (pageDate !== target) return [];
+  if (!dateInRange(pageDate, target)) return [];
   return anchors.map(m => {
     try {
       const u = new URL(decode(m[1]), base).href;
       const title = strip(m[2]);
       if (!looksArticle(u, title)) return null;
-      return { url: cleanUrl(u), published: target, source: 'Homepage link', title };
+      return { url: cleanUrl(u), published: pageDate, source: 'Homepage link', title };
     } catch { return null; }
   }).filter(Boolean);
 }
@@ -104,6 +107,9 @@ function dateKey(s, tz) {
   const d = new Date(s); if (Number.isNaN(d.getTime())) return String(s).slice(0,10);
   const p = new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);
   const o = Object.fromEntries(p.map(x=>[x.type,x.value])); return `${o.year}-${o.month}-${o.day}`;
+}
+function dateInRange(key, range) {
+  return key >= range.start && key <= range.end;
 }
 function tag(xml, name) { const re = new RegExp(`<${name}[^>]*>([\\s\\S]*?)<\\/${name}>`, 'i'); const m = xml.match(re); return m ? decode(m[1].trim()) : ''; }
 function attrLink(xml) { const m = xml.match(/<link[^>]+href=["']([^"']+)["']/i); return m ? decode(m[1]) : ''; }

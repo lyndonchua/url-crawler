@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Daily News URL Sieve</title>
   <style>
-    :root{--bg:#f5f7fb;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--brand:#2563eb;--brand2:#1d4ed8;--good:#059669;--bad:#dc2626;--soft:#eff6ff}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}.wrap{max-width:1100px;margin:0 auto;padding:24px}.hero{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}.title{font-size:28px;font-weight:850;margin:0 0 6px}.sub{color:var(--muted);font-size:14px;line-height:1.5}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px rgba(15,23,42,.06);padding:18px;margin-bottom:16px}.grid{display:grid;grid-template-columns:1.5fr .75fr .75fr;gap:12px}@media(max-width:800px){.grid{grid-template-columns:1fr}.hero{display:block}}label{font-weight:750;font-size:13px;display:block;margin:0 0 6px}input,select{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;font-size:15px;background:#fff;color:var(--ink)}input:focus,select:focus{outline:3px solid #bfdbfe;border-color:#60a5fa}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer;background:var(--brand);color:white;box-shadow:0 8px 20px rgba(37,99,235,.18)}button:hover{background:var(--brand2)}button.secondary{background:#111827}button.ghost{background:#fff;color:#111827;border:1px solid var(--line);box-shadow:none}.pill{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:8px 10px;background:#fff;font-size:13px;color:var(--muted)}.status{margin-top:12px;font-size:14px;color:var(--muted);line-height:1.45}.status.ok{color:var(--good)}.status.err{color:var(--bad)}.resultsHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 12px}.count{font-size:13px;color:var(--muted)}.list{display:grid;gap:10px}.item{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.itemTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.url{font-weight:800;word-break:break-word;color:#1d4ed8;text-decoration:none}.url:hover{text-decoration:underline}.meta{font-size:12px;color:var(--muted);margin-top:6px}.badge{font-size:12px;border-radius:999px;padding:5px 8px;background:var(--soft);color:#1e40af;white-space:nowrap}.empty{padding:22px;border:1px dashed #cbd5e1;border-radius:14px;text-align:center;color:var(--muted);background:#f8fafc}.small{font-size:12px;color:var(--muted)}.checkbox{display:flex;align-items:center;gap:8px}.checkbox input{width:auto}.quickBar{margin-top:12px;border:1px solid var(--line);border-radius:14px;background:#f8fafc;padding:8px;max-height:74px;overflow:auto}.preset{display:flex;gap:6px;flex-wrap:nowrap;align-items:center;min-width:max-content}.preset button{padding:6px 8px;font-size:11px;line-height:1;border-radius:999px;box-shadow:none}.preset .small{white-space:nowrap;margin-right:2px}.spinner{display:none;width:16px;height:16px;border:2px solid #dbeafe;border-top-color:#2563eb;border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loading .spinner{display:inline-block}.loading button.primary{opacity:.75;pointer-events:none}</style>
+    :root{--bg:#f5f7fb;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--brand:#2563eb;--brand2:#1d4ed8;--good:#059669;--bad:#dc2626;--soft:#eff6ff}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}.wrap{max-width:1100px;margin:0 auto;padding:24px}.hero{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}.title{font-size:28px;font-weight:850;margin:0 0 6px}.sub{color:var(--muted);font-size:14px;line-height:1.5}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px rgba(15,23,42,.06);padding:18px;margin-bottom:16px}.grid{display:grid;grid-template-columns:1.5fr .7fr .7fr .8fr;gap:12px}@media(max-width:800px){.grid{grid-template-columns:1fr}.hero{display:block}}label{font-weight:750;font-size:13px;display:block;margin:0 0 6px}input,select{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;font-size:15px;background:#fff;color:var(--ink)}input:focus,select:focus{outline:3px solid #bfdbfe;border-color:#60a5fa}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer;background:var(--brand);color:white;box-shadow:0 8px 20px rgba(37,99,235,.18)}button:hover{background:var(--brand2)}button.secondary{background:#111827}button.ghost{background:#fff;color:#111827;border:1px solid var(--line);box-shadow:none}.pill{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:8px 10px;background:#fff;font-size:13px;color:var(--muted)}.status{margin-top:12px;font-size:14px;color:var(--muted);line-height:1.45}.status.ok{color:var(--good)}.status.err{color:var(--bad)}.resultsHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 12px}.count{font-size:13px;color:var(--muted)}.list{display:grid;gap:10px}.item{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}.itemTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.url{font-weight:800;word-break:break-word;color:#1d4ed8;text-decoration:none}.url:hover{text-decoration:underline}.meta{font-size:12px;color:var(--muted);margin-top:6px}.badge{font-size:12px;border-radius:999px;padding:5px 8px;background:var(--soft);color:#1e40af;white-space:nowrap}.empty{padding:22px;border:1px dashed #cbd5e1;border-radius:14px;text-align:center;color:var(--muted);background:#f8fafc}.small{font-size:12px;color:var(--muted)}.checkbox{display:flex;align-items:center;gap:8px}.checkbox input{width:auto}.quickBar{margin-top:12px;border:1px solid var(--line);border-radius:14px;background:#f8fafc;padding:8px;max-height:74px;overflow:auto}.preset{display:flex;gap:6px;flex-wrap:nowrap;align-items:center;min-width:max-content}.preset button{padding:6px 8px;font-size:11px;line-height:1;border-radius:999px;box-shadow:none}.preset .small{white-space:nowrap;margin-right:2px}.spinner{display:none;width:16px;height:16px;border:2px solid #dbeafe;border-top-color:#2563eb;border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.loading .spinner{display:inline-block}.loading button.primary{opacity:.75;pointer-events:none}</style>
 </head>
 <body>
   <div class="wrap">
     <div class="hero">
       <div>
         <h1 class="title">Daily News URL Sieve</h1>
-        <div class="sub">Enter a news homepage such as <b>https://www.straitstimes.com/</b>. The app returns only URLs published on the selected date. No article body text is extracted.</div>
+        <div class="sub">Enter a news homepage such as <b>https://www.straitstimes.com/</b>. The app returns only URLs published within the selected date range. No article body text is extracted.</div>
       </div>
       <div class="pill">Singapore time by default</div>
     </div>
@@ -24,8 +24,12 @@
           <input id="siteUrl" value="https://www.straitstimes.com/" placeholder="https://www.straitstimes.com/" />
         </div>
         <div>
-          <label for="date">Date</label>
-          <input id="date" type="date" />
+          <label for="dateFrom">From date</label>
+          <input id="dateFrom" type="date" />
+        </div>
+        <div>
+          <label for="dateTo">To date</label>
+          <input id="dateTo" type="date" />
         </div>
         <div>
           <label for="sourceMode">Source mode</label>
@@ -38,7 +42,7 @@
         </div>
       </div>
       <div class="row">
-        <button class="primary" id="fetchBtn"><span class="spinner"></span> Fetch today’s URLs</button>
+        <button class="primary" id="fetchBtn"><span class="spinner"></span> Fetch URLs</button>
         <button class="ghost" id="copyBtn">Copy URLs</button>
         <button class="ghost" id="csvBtn">Export CSV</button>
         <button class="ghost" id="clearBtn">Clear</button>
@@ -46,22 +50,11 @@
       <div class="quickBar" aria-label="Scrollable quick sources">
         <div class="preset">
           <span class="small">Quick:</span>
-          <button class="ghost" data-url="https://www.reuters.com/" title="Reuters">Reuters</button>
-          <button class="ghost" data-url="https://www.bbc.com/news" title="BBC News">BBC</button>
-          <button class="ghost" data-url="https://www.npr.org/" title="NPR">NPR</button>
-          <button class="ghost" data-url="https://www.channelnewsasia.com/" title="Channel NewsAsia">CNA</button>
-          <button class="ghost" data-url="https://www.euronews.com/" title="Euronews">Euronews</button>
-          <button class="ghost" data-url="https://www.theguardian.com/" title="The Guardian">Guardian</button>
-          <button class="ghost" data-url="https://www.sciencedaily.com/" title="ScienceDaily">ScienceDaily</button>
-          <button class="ghost" data-url="https://www.howtogeek.com/" title="HowToGeek">HowToGeek</button>
-          <button class="ghost" data-url="https://www.techradar.com/" title="TechRadar">TechRadar</button>
-          <button class="ghost" data-url="https://www.tomshardware.com/" title="Tom's Hardware">Tom's</button>
-          <button class="ghost" data-url="https://www.zdnet.com/" title="ZDNet">ZDNet</button>
-          <button class="ghost" data-url="https://9to5mac.com/" title="9to5Mac">9to5Mac</button>
-          <button class="ghost" data-url="https://venturebeat.com/" title="VentureBeat">VentureBeat</button>
-          <button class="ghost" data-url="https://thehill.com/" title="The Hill">The Hill</button>
           <button class="ghost" data-url="https://www.straitstimes.com/" title="Straits Times">ST</button>
+          <button class="ghost" data-url="https://www.channelnewsasia.com/" title="Channel NewsAsia">CNA</button>
+          <button class="ghost" data-url="https://www.todayonline.com/" title="TODAY">TODAY</button>
           <button class="ghost" data-url="https://www.businesstimes.com.sg/" title="Business Times">BT</button>
+          <button class="ghost" data-url="https://www.bbc.com/news" title="BBC News">BBC</button>
           <button class="ghost" data-url="https://collider.com/" title="Collider">COL</button>
           <button class="ghost" data-url="https://www.xda-developers.com/" title="XDA Developers">XDA</button>
           <button class="ghost" data-url="https://variety.com/" title="Variety">VAR</button>
@@ -69,11 +62,19 @@
           <button class="ghost" data-url="https://gizmodo.com/" title="Gizmodo">GIZ</button>
           <button class="ghost" data-url="https://www.menshealth.com/" title="Men's Health">MH</button>
           <button class="ghost" data-url="https://www.pcguide.com/" title="PC Guide">PCG</button>
+          <button class="ghost" data-url="https://www.techradar.com/" title="TechRadar">TR</button>
           <button class="ghost" data-url="https://www.project-syndicate.org/" title="Project Syndicate">PS</button>
+          <button class="ghost" data-url="https://www.theguardian.com/" title="The Guardian">GDN</button>
+          <button class="ghost" data-url="https://www.tomshardware.com/" title="Tom's Hardware">TH</button>
           <button class="ghost" data-url="https://www.androidcentral.com/" title="Android Central">AC</button>
           <button class="ghost" data-url="https://www.cnbc.com/" title="CNBC">CNBC</button>
           <button class="ghost" data-url="https://time.com/" title="TIME">TIME</button>
+          <button class="ghost" data-url="https://thehill.com/" title="The Hill">HILL</button>
           <button class="ghost" data-url="https://www.cnn.com/" title="CNN">CNN</button>
+          <button class="ghost" data-url="https://edition.cnn.com/" title="CNN Edition">ECNN</button>
+          <button class="ghost" data-url="https://www.economist.com/" title="The Economist">ECO</button>
+          <button class="ghost" data-url="https://www.cosmopolitan.com/" title="Cosmopolitan">COS</button>
+          <button class="ghost" data-url="https://www.tomsguide.com/" title="Tom's Guide">TG</button>
         </div>
       </div>
       <div id="status" class="status">Ready.</div>
@@ -100,7 +101,8 @@ function sgToday(){
   const o = Object.fromEntries(p.map(x=>[x.type,x.value]));
   return `${o.year}-${o.month}-${o.day}`;
 }
-$('date').value = sgToday();
+$('dateFrom').value = sgToday();
+$('dateTo').value = sgToday();
 
 function setStatus(msg, cls=''){
   const el=$('status'); el.textContent=msg; el.className='status '+cls;
@@ -121,15 +123,17 @@ function render(){
 function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 
 async function fetchUrls(){
-  const body = { url:$('siteUrl').value.trim(), date:$('date').value, mode:$('sourceMode').value, timezone:'Asia/Singapore' };
+  const body = { url:$('siteUrl').value.trim(), dateFrom:$('dateFrom').value, dateTo:$('dateTo').value, mode:$('sourceMode').value, timezone:'Asia/Singapore' };
   if(!body.url) return setStatus('Enter a news site URL first.','err');
-  document.body.classList.add('loading'); setStatus('Fetching public feeds/sitemaps and filtering by date...');
+  if(!body.dateFrom || !body.dateTo) return setStatus('Select both from date and to date.','err');
+  if(body.dateFrom > body.dateTo) return setStatus('From date cannot be after To date.','err');
+  document.body.classList.add('loading'); setStatus('Fetching public feeds/sitemaps and filtering by date range...');
   try{
     const res = await fetch('/api/fetch-news', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
     const data = await res.json();
     if(!res.ok) throw new Error(data.error || 'Fetch failed');
     rows = data.items || [];
-    $('runInfo').textContent = `${data.date} · ${data.modeUsed || body.mode}`;
+    $('runInfo').textContent = `${data.dateFrom} to ${data.dateTo} · ${data.modeUsed || body.mode}`;
     render();
     setStatus(data.message || `Found ${rows.length} URLs.`, rows.length ? 'ok' : '');
   }catch(e){ rows=[]; render(); setStatus(e.message, 'err'); }
@@ -145,7 +149,7 @@ function exportCsv(){
   if(!rows.length) return setStatus('No URLs to export.','err');
   const csv = 'url,published,source,title\n' + rows.map(r=>[r.url,r.published||'',r.source||'',r.title||''].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
   const blob = new Blob([csv],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob); a.download=`news-urls-${$('date').value}.csv`; a.click(); URL.revokeObjectURL(a.href);
+  a.href=URL.createObjectURL(blob); a.download=`news-urls-${$('dateFrom').value}-to-${$('dateTo').value}.csv`; a.click(); URL.revokeObjectURL(a.href);
 }
 
 $('fetchBtn').onclick=fetchUrls; $('copyBtn').onclick=copyUrls; $('csvBtn').onclick=exportCsv; $('clearBtn').onclick=()=>{rows=[];render();setStatus('Cleared.')};
